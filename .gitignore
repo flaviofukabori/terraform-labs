@@ -1,0 +1,7 @@
+local-outputs
+
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.lock.hcl
+.terraform/providers/
