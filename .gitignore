@@ -4,4 +4,5 @@ local-outputs
 *.tfstate.backup
 *.tfvars
 *.lock.hcl
+*.pub
 .terraform/providers/

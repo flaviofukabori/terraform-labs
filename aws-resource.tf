@@ -18,6 +18,14 @@ resource "aws_iam_user_policy_attachment" "flavio-admin-access" {
   policy_arn = aws_iam_policy.adminUser.arn
 }
 
+# resource "aws_iam_access_key" "flavio-access-key" {
+#   user = aws_iam_user.flavio-adm.name  
+# }
+# 
+# output "flavio-access-key" {
+#   value = aws_iam_access_key.flavio-access-key.id
+# }
+
 #######################
 # S3 buckets #
 #######################
@@ -63,4 +71,35 @@ resource "aws_s3_bucket_policy" "terraform-buck-policy" {
     }
 
   EOF
+}
+
+########################
+# EC2 Instances and Security Group
+########################
+
+resource "aws_instance" "python-etl" {
+  ami = "ami-0ed9277fb7eb570c9"
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "Python Etl"
+  }
+
+  key_name = aws_key_pair.python-etl.id
+  vpc_security_group_ids = [aws_security_group.ssh-access.id]
+}
+
+resource "aws_security_group" "ssh-access" {
+  name = "ssh-access"
+  description = "Allow ssh access"
+  ingress {
+    from_port = "22"
+    to_port = "22"
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_key_pair" "python-etl" {
+  public_key = file("dummy-ssh-key.pub")
 }
