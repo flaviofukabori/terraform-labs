@@ -73,21 +73,30 @@ resource "aws_s3_bucket_policy" "terraform-buck-policy" {
   EOF
 }
 
+# imported resource
+resource "aws_s3_bucket" "imp-bucket" {
+  acl                         = "private"
+  force_destroy               = false
+  bucket                      = "flaviofuka-imp-bucket"
+  tags                        = {}
+
+}
+
 ########################
 # EC2 Instances and Security Group
 ########################
 
-resource "aws_instance" "python-etl" {
-  ami = "ami-0ed9277fb7eb570c9"
-  instance_type = "t2.micro"
-
-  tags = {
-    Name = "Python Etl"
-  }
-
-  key_name = aws_key_pair.python-etl.id
-  vpc_security_group_ids = [aws_security_group.ssh-access.id]
-}
+# resource "aws_instance" "python-etl" {
+#   ami = "ami-0ed9277fb7eb570c9"
+#   instance_type = "t2.micro"
+# 
+#   tags = {
+#     Name = "Python Etl"
+#   }
+# 
+#   key_name = aws_key_pair.python-etl.id
+#   vpc_security_group_ids = [aws_security_group.ssh-access.id]
+# }
 
 resource "aws_security_group" "ssh-access" {
   name = "ssh-access"
